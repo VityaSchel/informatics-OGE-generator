@@ -1,0 +1,9 @@
+.generator-form-gallery {
+  flex-direction: column;
+}
+
+@media (orientation: landscape) and (max-height: 580px) {
+  .generator-form-gallery {
+    flex-direction: row;
+  }
+}
