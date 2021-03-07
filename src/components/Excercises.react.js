@@ -67,6 +67,9 @@ class ExcerciseText extends React.Component {
       case 3:
         return <Excercise3 />
 
+      case 4:
+        return <span>?</span>
+
       case 5:
         return <Excercise5 />
 
@@ -79,11 +82,23 @@ class ExcerciseText extends React.Component {
       case 8:
         return <Excercise8 />
 
+      case 9:
+        return <span>?</span>
+
       case 10:
         return <Excercise10 />
 
+      case 11:
+        return <span>?</span>
+
+      case 12:
+        return <span>?</span>
+
       case 13:
         return <Excercise13 />
+
+      case 14:
+        return <span>?</span>
 
       case 15:
         return <Excercise15 />
