@@ -16,10 +16,6 @@ let styles = {
     whiteSpace: 'pre-line'
   },
 
-  btn: {
-    borderRadius: '0 revert revert 0'
-  },
-
   gallery: {
     display: 'flex',
     gap: '20px'

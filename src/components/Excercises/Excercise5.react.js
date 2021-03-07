@@ -1,4 +1,5 @@
 import React from 'react'
+import utils from '../../utils.js'
 
 class Excercise5 extends React.Component {
   constructor (props){
@@ -10,7 +11,7 @@ class Excercise5 extends React.Component {
   generateExcerciseData(){
     this.startNumber = Math.floor(Math.random() * 10)
     const min = 2, max = 5
-    this.answer = Math.floor(min + Math.random() * (max + 1 - min))
+    this.answer = utils.random(min, max)
     this.algorithm = ''
 
     this.endNumber = this.startNumber

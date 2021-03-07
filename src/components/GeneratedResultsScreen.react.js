@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from '../styles/GeneratedResultsScreen.style.js'
 import { BsClipboard } from "react-icons/bs"
-import { Alert } from 'reactstrap'
+import { Alert, Button } from 'reactstrap'
 import Excercises from './Excercises.react.js'
 
 let seed;
@@ -10,7 +10,7 @@ class GeneratedResultsScreen extends React.Component {
   constructor (props){
     super(props);
 
-    seed = this.props.seed || 'случайный';
+    seed = this.props.seed;
   }
 
   render(){
@@ -48,9 +48,9 @@ class Copy extends React.Component {
 
   render(){
     return (
-      <button onClick={() => this.copySeed()}>
+      <Button color="light" onClick={() => this.copySeed()}>
         <BsClipboard />
-      </button>
+      </Button>
     )
   }
 }

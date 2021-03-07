@@ -1,4 +1,5 @@
 import React from 'react'
+import utils from '../../utils.js'
 
 class Excercise3 extends React.Component {
   constructor (props){
@@ -13,7 +14,7 @@ class Excercise3 extends React.Component {
       'sameDigits': 'цифры x одинаковые', 'notSameDigits': 'цифры x неодинаковые'}
 
     const min = 20, max = 70
-    let condition1 = Math.floor(min + Math.random() * (max + 1 - min))
+    let condition1 = utils.random(min, max)
     let condition2 = conditionTypes[Math.floor(Math.random()*4)]
     let condition2text = condition2textTypes[condition2]
 

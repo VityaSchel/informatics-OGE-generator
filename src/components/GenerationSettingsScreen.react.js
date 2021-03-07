@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../styles/GenerationSettingsScreen.style.js';
+import '../styles/GenerationSettingsScreen.css'
 import {
   InputGroup,
   Input,

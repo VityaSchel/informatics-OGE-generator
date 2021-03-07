@@ -1,4 +1,5 @@
 import React from 'react'
+import utils from '../../utils.js'
 
 class Excercise6 extends React.Component {
   constructor (props){
@@ -13,24 +14,24 @@ class Excercise6 extends React.Component {
 
     this.condition1 = {
       comparison: comparionTypes[Math.floor(Math.random()*5)],
-      with: Math.floor(min + Math.random() * (max + 1 - min))
+      with: utils.random(min, max)
     }
 
     this.condition2 = {
       comparison: comparionTypes[Math.floor(Math.random()*5)],
-      with: Math.floor(min + Math.random() * (max + 1 - min))
+      with: utils.random(min, max)
     }
 
     this.conditionsComparison = ['and', 'or'][Math.floor(Math.random()*2)]
 
     this.neededOutput = ['YES', 'NO'][Math.floor(Math.random()*2)]
 
-    this.executionsCount = Math.floor(5 + Math.random() * (15 + 1 - 5))
+    this.executionsCount = utils.random(5, 15)
     this.executions = Array(this.executionsCount).fill([])
     this.executionsOutput = []
     for(let i = 0; i < this.executions.length; i++){
-      let input1 = Math.floor(min + Math.random() * (max + 1 - min));
-      let input2 = Math.floor(min + Math.random() * (max + 1 - min));
+      let input1 = utils.random(min, max)
+      let input2 = utils.random(min, max)
       this.executions[i] = [input1, input2]
 
       let condition1true = eval(input1 + this.condition1.comparison + this.condition1.with);
@@ -110,7 +111,7 @@ class Excercise6 extends React.Component {
           </tbody>
         </table>
         <p>Было проведено {this.executionsCount} запусков программы, при которых в качестве значений переменных вводились следующие пары чисел (s, t):</p>
-        <p>{this.executions}. Сколько было запусков, при которых программа напечатала «{this.neededOutput}»? {this.answer}</p>
+        <p>{this.executions}. Сколько было запусков, при которых программа напечатала «{this.neededOutput}»?</p>
       </div>
     )
   }

@@ -1,11 +1,17 @@
 import React from 'react'
 import { InputGroup, InputGroupText, Input } from 'reactstrap'
 import styles from '../styles/Excercises.style.js'
+import '../styles/Excercises.css'
 import Excercise1 from './Excercises/Excercise1.react.js'
 import Excercise2 from './Excercises/Excercise2.react.js'
 import Excercise3 from './Excercises/Excercise3.react.js'
 import Excercise5 from './Excercises/Excercise5.react.js'
 import Excercise6 from './Excercises/Excercise6.react.js'
+import Excercise7 from './Excercises/Excercise7.react.js'
+import Excercise8 from './Excercises/Excercise8.react.js'
+import Excercise10 from './Excercises/Excercise10.react.js'
+import Excercise13 from './Excercises/Excercise13.react.js'
+import Excercise15 from './Excercises/Excercise15.react.js'
 
 class Excercises extends React.Component {
   constructor (props){
@@ -26,6 +32,7 @@ class Excercises extends React.Component {
   }
 }
 
+const hideAnswerInput = [13, 15]
 class Excercise extends React.Component {
   constructor (props){
     super(props);
@@ -37,7 +44,7 @@ class Excercise extends React.Component {
         <div style={styles.excerciseIndex}>{this.props.number}</div>
         <div style={styles.excerciseInner}>
           <ExcerciseText number={this.props.number} />
-          <ExcerciseAnswer number={this.props.number} />
+          {!hideAnswerInput.includes(this.props.number)?(<ExcerciseAnswer number={this.props.number} />):(<></>)}
         </div>
       </div>
     )
@@ -65,6 +72,21 @@ class ExcerciseText extends React.Component {
 
       case 6:
         return <Excercise6 />
+
+      case 7:
+        return <Excercise7 />
+
+      case 8:
+        return <Excercise8 />
+
+      case 10:
+        return <Excercise10 />
+
+      case 13:
+        return <Excercise13 />
+
+      case 15:
+        return <Excercise15 />
 
       default:
         return <p>?</p>
