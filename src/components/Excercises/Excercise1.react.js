@@ -1,4 +1,5 @@
 import React from 'react'
+import utils from '../../utils.js'
 
 class Excercise1 extends React.Component {
   constructor (props){
@@ -9,11 +10,11 @@ class Excercise1 extends React.Component {
 
   generateExcerciseData(){
     let _symbolEncodingSizeInt = Math.pow(2, Math.ceil(Math.random()*4))
-    let _symbolEncodingSizeType = ['битами', 'байтами'][Math.floor(Math.random()*2)]
+    let _symbolEncodingSizeType = utils.randomItem(['битами', 'байтами'])
     this.symbolEncodingSize = `${_symbolEncodingSizeInt} ${_symbolEncodingSizeType}`
     this.symbolEncodingSizeInBits = _symbolEncodingSizeType==='битами'?_symbolEncodingSizeInt:_symbolEncodingSizeInt*8
 
-    this.symbolsRemoved = Math.max(2, Math.floor(Math.random()*9))
+    this.symbolsRemoved = utils.random(2,8)
 
     const animalsByCharCount = {
       2: ['ёж', 'уж', 'як'],
@@ -29,9 +30,9 @@ class Excercise1 extends React.Component {
     for (let i = 0; i < 8; i++) {
       let _charCount = i+2
       let possibleWords = animalsByCharCount[_charCount]
-      listOfAnimals.push(possibleWords[Math.floor(Math.random()*possibleWords.length)])
+      listOfAnimals.push(utils.randomItem(possibleWords))
     }
-    listOfAnimals[0] = listOfAnimals[0][0].toUpperCase() + listOfAnimals[0].substring(1)
+    listOfAnimals[0] = utils.capitalize(listOfAnimals[0])
 
     this.removedName = listOfAnimals.find(animal => {
       if(animal.length === this.symbolsRemoved){return animal}

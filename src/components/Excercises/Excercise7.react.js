@@ -10,11 +10,14 @@ class Excercise6 extends React.Component {
   }
 
   generateExcerciseData(){
-    this.filename = randomWords({ min: 1, max: 3, join: '_' })+'.'+
-                                                    ['txt','doc','pdf','pptx','key'][Math.floor(Math.random()*5)]
-    this.servername = ['gov','obr','state','talk','reg','tan','term'][Math.floor(Math.random()*7)]+'.'+
-                                                    ['ru','com','org','net','app'][Math.floor(Math.random()*5)]
-    this.protocol = ['http','https','ftp','ssh'][Math.floor(Math.random()*4)]
+    const extensions = ['txt','doc','pdf','pptx','key']
+    const domains = ['gov','obr','state','talk','reg','tan','term']
+    const domainZones = ['ru','com','org','net','app']
+    const protocol = ['http','https','ftp','ssh']
+
+    this.filename = randomWords({ min: 1, max: 3, join: '_' })+'.'+utils.randomItem(extensions)
+    this.servername = utils.randomItem(domains)+'.'+utils.randomItem(domainZones)
+    this.protocol = utils.randomItem(protocol)
 
     this.segments = ['/', '://', ...this.filename.split('.'), ...this.servername.split('.'), this.protocol]
     this.segments[2] += '.'

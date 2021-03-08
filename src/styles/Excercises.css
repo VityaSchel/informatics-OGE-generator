@@ -1,3 +1,19 @@
 table td pre {
   margin: 0;
 }
+
+.progress-bar {
+  animation: progressfill 1s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-out;
+}
+
+@keyframes progressfill {
+    0% {
+      width: 0%;
+    }
+
+    100% {
+      width: 100%;
+    }
+}

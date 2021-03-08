@@ -5,11 +5,14 @@ import '../styles/Excercises.css'
 import Excercise1 from './Excercises/Excercise1.react.js'
 import Excercise2 from './Excercises/Excercise2.react.js'
 import Excercise3 from './Excercises/Excercise3.react.js'
+import Excercise4 from './Excercises/Excercise4.react.js'
 import Excercise5 from './Excercises/Excercise5.react.js'
 import Excercise6 from './Excercises/Excercise6.react.js'
 import Excercise7 from './Excercises/Excercise7.react.js'
 import Excercise8 from './Excercises/Excercise8.react.js'
 import Excercise10 from './Excercises/Excercise10.react.js'
+import Excercise11 from './Excercises/Excercise11.react.js'
+import Excercise12 from './Excercises/Excercise12.react.js'
 import Excercise13 from './Excercises/Excercise13.react.js'
 import Excercise15 from './Excercises/Excercise15.react.js'
 
@@ -68,7 +71,7 @@ class ExcerciseText extends React.Component {
         return <Excercise3 />
 
       case 4:
-        return <span>?</span>
+        return <Excercise4 />
 
       case 5:
         return <Excercise5 />
@@ -89,10 +92,10 @@ class ExcerciseText extends React.Component {
         return <Excercise10 />
 
       case 11:
-        return <span>?</span>
+        return <Excercise11 />
 
       case 12:
-        return <span>?</span>
+        return <Excercise12 />
 
       case 13:
         return <Excercise13 />

@@ -2,8 +2,9 @@ import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import styles from '../styles/GeneratedResultsScreen.style.js'
 import { BsClipboard } from "react-icons/bs"
-import { Alert, Button, Card, CardBody } from 'reactstrap'
+import { Alert, Button, Card, CardBody, Progress } from 'reactstrap'
 import Excercises from './Excercises.react.js'
+import '../extraFiles.js'
 
 let seed;
 
@@ -147,17 +148,26 @@ class SectionInstructions extends React.Component {
 class ExtraFiles extends React.Component {
   constructor(props){
     super(props)
+
+    this.state = {
+      windowPhase: 'default'
+    }
+    window.appData.extraFilesSetState = (value) => this.setState({windowPhase: value})
   }
 
   loaded(){
     this.size = '1 МБ'
-    let downloadButton = <Button color='success'>Скачать [{this.size}]</Button>
+    let downloadButton = <Button color='success' id='button-downloader' extra-files-action-button>Скачать zip</Button>
     let downloaderButton = document.querySelector('#accordion').contentDocument.querySelector('#button-downloader')
     downloaderButton.outerHTML = ReactDOMServer.renderToString(downloadButton)
+    downloaderButton = document.querySelector('#accordion').contentDocument.querySelector('#button-downloader')
+    downloaderButton.setAttribute('onclick', '__medprovider__(\'download\')')
 
-    let startButton = <Button color='success'>Запустить браузер (вы не сможете вернуться)</Button>
+    let startButton = <Button color='success' id='button-browser' extra-files-action-button>Запустить браузер</Button>
     let buttonStarter = document.querySelector('#accordion').contentDocument.querySelector('#button-browser')
     buttonStarter.outerHTML = ReactDOMServer.renderToString(startButton)
+    buttonStarter = document.querySelector('#accordion').contentDocument.querySelector('#button-browser')
+    buttonStarter.setAttribute('onclick', '__medprovider__(\'start_browser\')')
   }
 
   render(){
@@ -166,8 +176,38 @@ class ExtraFiles extends React.Component {
         <Card>
           <CardBody>
             <div>
-              <p>Для выполнения заданий 11, 12 выберете один из двух вариантов:</p>
-              <iframe src="/accordion.html" width='100%' height='250px' id='accordion' onLoad={() => this.loaded()}/>
+              {this.state.windowPhase === 'default' ?
+                (
+                  <>
+                    <p>Для выполнения заданий 11, 12 выберете один из двух вариантов. Вы можете выбрать лишь один раз.</p>
+                    <iframe src="/accordion.html" width='100%' height='270px' id='accordion' onLoad={() => this.loaded()}/>
+                  </>
+                )
+                :
+                (
+                  this.state.windowPhase === 'loading' ?
+                    (
+                      <div>
+                        <p>Архив создается и запаковывается...</p>
+                        <Progress value={0} />
+                      </div>
+                    )
+                    :
+                    (
+                      this.state.windowPhase === 'browser' ?
+                        (
+                          <p> todo: file browser </p>
+                        )
+                        :
+                        (
+                          <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                            <label>Вы выбрали <b>Скачать архив</b>. </label>
+                            <Button color='primary' onClick={() => window.ExtraFiles.download()}>Скачать снова</Button>
+                          </div>
+                        )
+                    )
+                )
+              }
             </div>
           </CardBody>
         </Card>

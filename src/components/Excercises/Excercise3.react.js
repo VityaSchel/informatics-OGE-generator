@@ -64,7 +64,7 @@ class Excercise3 extends React.Component {
   render(){
     return (
       <div>
-        <p>Напишите наименьшее число x, для которого истинно высказывание {this.answer}</p>
+        <p>Напишите наименьшее число x, для которого истинно высказывание</p>
         <pre>{this.logicalExpression}</pre>
       </div>
     )
