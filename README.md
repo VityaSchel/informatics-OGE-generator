@@ -1,4 +1,4 @@
-# [Удобный генератор вариантов ОГЭ по информатике](https://vityaschel.github.io/informatics-OGE-generator/build/)
+# [Удобный генератор вариантов ОГЭ по информатике](https://oge.utidteam.com/)
 
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/vityaschel/informatics-oge-generator) ![GitHub issues](https://img.shields.io/github/issues/vityaschel/informatics-oge-generator) ![GitHub](https://img.shields.io/github/license/vityaschel/informatics-oge-generator) ![GitHub last commit](https://img.shields.io/github/last-commit/vityaschel/informatics-oge-generator)
 
@@ -19,11 +19,11 @@
 
 #### Онлайн
 
-Откройте сайт GitHub Pages и работайте через него: https://vityaschel.github.io/informatics-OGE-generator/build/
+Откройте сайт и работайте через него: https://oge.utidteam.com/
 
 #### Оффлайн
 
-Скачайте репозиторий с GitHub и откройте **index.html** внутри папки **/build/**
+Скачайте репозиторий с GitHub, установите все зависимости и запустите локальный сервер внутри папки **/build/**. Убедитесь, что корневая директория сервера внутри папки **/build/**.
 
 `git clone https://github.com/VityaSchel/informatics-OGE-generator.git`
 
