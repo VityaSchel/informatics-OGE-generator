@@ -27,12 +27,12 @@ class Excercise15 extends React.Component {
     this.multiple = utils.random(2, 8)
     this.non_multiple = utils.random(2, 8, this.multiple)
 
-    const exampleSolution = `solution(array){
+    this.exampleSolution = `function solution(array){
       let multiple = ${this.multiple}
       let non_multiple = ${this.non_multiple}
       return array.filter(input => {return (input%multiple===0)&&(input%non_multiple!==0)}).length
     }`
-    let [input, output] = this.test('function '+exampleSolution.toString())
+    let [input, output] = this.test(this.exampleSolution.toString())
     this.example_input = input
     this.example_output = output
   }
@@ -42,17 +42,19 @@ class Excercise15 extends React.Component {
     this.setState({execution_input: input, execution_output: output || (output===0?output:'Пусто')})
   }
 
-  test(f){
-    let input = Array(5).fill('').map(random => utils.random(0,100))
+  test(f, specified_input = undefined, display_output = true){
+    let input = specified_input || Array(5).fill('').map(random => utils.random(0,100))
     let executed_code = `${f}\n solution([${input.join(', ')}])`
     let output;
     try {
       output = eval(executed_code)
-      this.setState({execution_output_type: [undefined, null, ''].includes(output)?'empty':'default'})
+      if(display_output)
+        this.setState({execution_output_type: [undefined, null, ''].includes(output)?'empty':'default'})
       output = output || (output===0?output:'Пусто')
     } catch (e) {
       output = 'Ошибка:\n'+e
-      this.setState({execution_output_type: 'error'})
+      if(display_output)
+        this.setState({execution_output_type: 'error'})
     }
     input = input.join(' \n')
     return [input, output]
@@ -65,6 +67,16 @@ class Excercise15 extends React.Component {
   handleReset(){
     this.setState({value: defaultCode})
     this.toggle()
+  }
+
+  testUserSolution(){
+    let userSolution = this.state.value
+    for (var i = 0; i < 10; i++) {
+      let [inputToUserSolution, outputFromUserSolution] = this.test(userSolution, undefined, false)
+      let [, correctOutput] = this.test(this.exampleSolution.toString(), inputToUserSolution.split(' \n'), false)
+      if(outputFromUserSolution != correctOutput) return false
+    }
+    return true
   }
 
   render(){

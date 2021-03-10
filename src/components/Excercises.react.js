@@ -14,6 +14,7 @@ import Excercise10 from './Excercises/Excercise10.react.js'
 import Excercise11 from './Excercises/Excercise11.react.js'
 import Excercise12 from './Excercises/Excercise12.react.js'
 import Excercise13 from './Excercises/Excercise13.react.js'
+import Excercise14 from './Excercises/Excercise14.react.js'
 import Excercise15 from './Excercises/Excercise15.react.js'
 
 class Excercises extends React.Component {
@@ -35,7 +36,7 @@ class Excercises extends React.Component {
   }
 }
 
-const hideAnswerInput = [13, 15]
+const hideAnswerInput = [13, 14, 15]
 class Excercise extends React.Component {
   constructor (props){
     super(props);
@@ -101,7 +102,7 @@ class ExcerciseText extends React.Component {
         return <Excercise13 />
 
       case 14:
-        return <span>?</span>
+        return <Excercise14 />
 
       case 15:
         return <Excercise15 />
