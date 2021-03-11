@@ -39,9 +39,14 @@
   <script>
     function __medprovider__(action) {
       try {
+        if (action === 'start_browser') {
+          alert('Браузер еще не разработан')
+        }
         document.querySelectorAll('[extra-files-action-button]').forEach(button => button.style.visibility = 'hidden')
         if(action === 'download'){
           window.parent.ExtraFiles.startGeneration()
+        } else if (action === 'start_browser') {
+          // todo: browser
         }
       } catch {}
     }

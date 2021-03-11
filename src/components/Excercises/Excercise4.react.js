@@ -58,8 +58,6 @@ class Excercise4 extends React.Component {
     */
 
     // ! Нужна помощь с алгоритмом перебора всех возможных путей во всех направлениях !
-
-    //console.log(Object.keys(utils.flatten()))
   }
 
   render(){
