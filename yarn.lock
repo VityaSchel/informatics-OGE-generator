@@ -4338,6 +4338,11 @@
   "resolved" "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.0.tgz"
   "version" "0.2.0"
 
+"dedent-js@^1.0.1":
+  "integrity" "sha1-vuX7fJ5yfYXf+iRZDRDsGrElUwU="
+  "resolved" "https://registry.npmjs.org/dedent-js/-/dedent-js-1.0.1.tgz"
+  "version" "1.0.1"
+
 "dedent@^0.7.0":
   "integrity" "sha1-JJXduvbrh0q7Dhvp3yLS5aVEMmw="
   "resolved" "https://registry.yarnpkg.com/dedent/-/dedent-0.7.0.tgz"

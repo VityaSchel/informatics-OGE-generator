@@ -34,7 +34,7 @@ class Excercise1 extends React.Component {
     }
     listOfAnimals[0] = utils.capitalize(listOfAnimals[0])
 
-    this.removedName = listOfAnimals.find(animal => {
+    this.answer = listOfAnimals.find(animal => {
       if(animal.length === this.symbolsRemoved){return animal}
     })
     this.removedNameBits = (this.symbolsRemoved+2)*this.symbolEncodingSizeInBits

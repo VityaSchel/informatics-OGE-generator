@@ -17,3 +17,7 @@ table td pre {
       width: 100%;
     }
 }
+
+.dropdown-purple:focus {
+  box-shadow: 0 0 0 0.25rem rgb(111, 66, 193, 0.5) !important;
+}

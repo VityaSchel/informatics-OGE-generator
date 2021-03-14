@@ -1,122 +1,99 @@
 import React, { useState } from 'react'
 import utils from '../../utils.js'
 import ryba from 'ryba-js'
-import { Button, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardBody } from 'reactstrap'
+import { Button, Row, Col, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardBody,
+         Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
 import {Controlled as CodeMirror} from 'react-codemirror2'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/mode/javascript/javascript'
+import 'codemirror/mode/python/python'
 import 'codemirror/theme/material-ocean.css'
+import tasksTemplates from './Excercise15tasks/index.js'
 
-let tasksTemplates = [
-  {
-    type: 'find_multiple_number',
-    multiple: undefined,
-    non_multiple: undefined,
-    text: `Напишите функцию, которая в последовательности натуральных чисел определяет количество чисел,\
-           кратных %multiple%, но не кратных %non_multiple%. Программа получает на вход количество чисел в последовательности,\
-           а затем сами числа. В последовательности всегда имеется число, кратное %multiple% и не кратное %non_multiple%.\
-           Количество чисел не превышает 1000. Введённые числа не превышают 30 000.
+const defaultCode = {
+  'javascript': `function solution(input){\n  // формат входных данных: %%input%%\n  // формат выходных данных: %%output%%\n  let output\n  return output\n}`,
+  'python': `def solution(input):\n  # формат входных данных: %%input%%\n  # формат выходных данных: %%output%%\n  output = ''\n  return output`,
+}
+const languageNames = {
+  'javascript': 'ECMAScript 6 (JS)',
+  'python': 'Python 3.8'
+}
+const defaultLanguage = 'javascript'
 
-           Программа должна вывести одно число: количество чисел, кратных %multiple%, но не кратных %multiple%.`,
-    inputFormat: '[4, 16, 28]',
-    outputFormat: '2',
-    exampleSolution: `function solution(array){
-                        let multiple = %multiple%
-                        let non_multiple = %non_multiple%
-                        return array.filter(input => {return (input%multiple===0)&&(input%non_multiple!==0)}).length
-                      }`,
-    inputFillFunction: () => '['+Array(5).fill('').map(() => utils.random(0,100)).join(', ')+']'
-  },
-  {
-    type: 'reversed_words',
-    limit: undefined,
-    text: `Напишите функцию, которая получает одно или больше слов, и возвращает строку, в которой все слова, в
-           которых больше %limit% букв перевернуты.`,
-    inputFormat: '[\'Привет\', \'мир\']',
-    outputFormat: '\'тевирП рим\'',
-    exampleSolution: `function solution(string){
-                        let limit = %limit%
-                        return string.split(' ').map(word => (word.length<%limit% ? word : word.split('').reverse().join(''))).join(' ')
-                      }`,
-    inputFillFunction: () => '\''+Array(5).fill('').map(() => utils.wordsLimit(utils.toPureLabel(ryba(1)), 1)).join(' ')+'\''
-  },
-  {
-    type: 'repeating_characters',
-    text: `Напишите функцию, которая возвращает количество повторяюшихся буквенных символов (не чувствительных к регистру)\
-           и цифр.`,
-    inputFormat: '\'testcase\'',
-    outputFormat: '3',
-    exampleSolution: `function solution(text){
-                        return text.toLowerCase().split('').filter(function(val, i, arr){
-                          return arr.indexOf(val) !== i && arr.lastIndexOf(val) === i;
-                        }).length
-                      }`,
-    inputFillFunction: () => 'hello world'
-  },
-  {
-    type: 'phone_number',
-    text: `Напишите функуцию, которая принимает массив из 10 цифр (от 0 до 9) и возвращает строку \
-           из этих цифр в формате телефонного номера.`,
-    inputFormat: '[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]',
-    outputFormat: '\'+7 (123) 456-78-90\'',
-    exampleSolution: `function solution(numbers){
-                        let format = "+7 (xxx) xxx-xx-xx";
-                        for(let i = 0; i < numbers.length; i++) {
-                          format = format.replace('x', numbers[i]);
-                        }
-                        return format;
-                      }`,
-    inputFillFunction: () => '['+Array(10).fill().map(digit => utils.random(0, 9)).join(', ')+']'
-  },
-  {
-    type: 'unique_number',
-    text: `Напишите функуцию, которая принимает массив из одинаковых цифр, кроме одной и выводит эту цифру`,
-    inputFormat: '[1, 1, 1, 2, 1, 1]',
-    outputFormat: '2',
-    exampleSolution: `function solution(arr){
-                        return arr.find(n => arr.indexOf(n) === arr.lastIndexOf(n));
-                      }`,
-    inputFillFunction: () => {
-      let array = Array(utils.random(5, 10)).fill(utils.random(1, 99))
-      array.push(utils.random(1, 99))
-      return '['+utils.shuffle(array).join(', ')+']'
-    }
-  }
-]
 class Excercise15 extends React.Component {
   constructor (props){
     super(props);
 
-    this.codemirrorRef = React.createRef()
+    this.sourceTask = utils.randomItem(tasksTemplates)
 
-    this.task = this.generateDataForTask(tasksTemplates[4])//utils.randomItem(tasksTemplates))
-    const defaultCode = `function solution(input){\n  // формат входных данных: ${this.task.inputFormat}\n  // формат выходных данных: ${this.task.outputFormat}\n  let output\n  return output\n}`
-    this.defaultCode = defaultCode
+    let ref = this
+    this.cachedTasksData = {}
+    tasksTemplates.forEach(t => {
+      ref.cachedTasksData[t.type] = {}
+      for (let languageName of Object.keys(languageNames)){
+        ref.cachedTasksData[t.type][languageName] = undefined
+      }
+    })
+
     this.state = {
-      value: defaultCode,
+      task: this.generateDataForTask(this.sourceTask, defaultLanguage, this),
+      language: defaultLanguage,
+      defaultCode: undefined,
+      dropdownOpen: false,
+      pythonCompilerLoading: 'none',
+
+      value: undefined,
+      resetConfirmationModalOpen: undefined,
+      execution_input: undefined,
+      execution_output: undefined,
+      execution_output_type: undefined
+    }
+
+    this.codemirrorRef = React.createRef()
+  }
+
+  componentDidMount(){
+    this.generateExcerciseData()
+  }
+
+  generateExcerciseData(){
+    let _defaultCode = this.getDefaultCode(defaultLanguage)
+
+    this.setState({
+      value: _defaultCode,
       resetConfirmationModalOpen: false,
       execution_input: 'Здесь появится ввод в вашу программу',
       execution_output: 'Здесь появится вывод вашей программы',
       execution_output_type: 'default'
-    }
-    this.generateExcerciseData()
+    }, this.exampleTest)
   }
 
-  generateDataForTask(_task) {
+  getDefaultCode(language){
+    return defaultCode[language].replace(/%%input%%/g, this.state.task.languagesSpecificData[language].inputFormat).replace(/%%output%%/g, this.state.task.languagesSpecificData[language].outputFormat)
+  }
+
+  generateDataForTask(_task, language, ref) {
+    let cachedTask = ref.cachedTasksData[_task.type][language]
+    if(cachedTask){
+      return cachedTask
+    }
+
     let task = Object.assign({}, _task)
     switch(task.type){
       case 'find_multiple_number':
         task.multiple = utils.random(2, 8)
         task.non_multiple = utils.random(2, 8, task.multiple)
-        task.exampleSolution = task.exampleSolution.replace(/%multiple%/g, task.multiple)
-                                                   .replace(/%non_multiple%/g, task.non_multiple)
+        task.languagesSpecificData[language].exampleSolution = task.languagesSpecificData[language].
+                                                                  exampleSolution.replace(/%multiple%/g, task.multiple)
+                                                                  .replace(/%non_multiple%/g, task.non_multiple)
         task.text = task.text.replace(/%multiple%/g, task.multiple)
                              .replace(/%non_multiple%/g, task.non_multiple)
         break;
 
       case 'reversed_words':
         task.limit = utils.random(5, 9)
-        task.exampleSolution = task.exampleSolution.replace(/%limit%/g, task.limit)
+        task.languagesSpecificData[language].exampleSolution = task.languagesSpecificData[language].
+                                                                      exampleSolution.replace(/%limit%/g, task.limit)
         task.text = task.text.replace(/%limit%/g, task.limit)
         break;
 
@@ -126,30 +103,41 @@ class Excercise15 extends React.Component {
         // nothing to change
         break;
     }
+
+    ref.cachedTasksData[_task.type][language] = task
+
     return task
   }
 
-  generateExcerciseData(){
-    let [input, output] = this.test(this.task.exampleSolution.toString())
-    this.example_input = this.formatInput(input)
-    this.example_output = output
-  }
-
-  execute(){
-    let [input, output] = this.test(this.state.value)
-    this.setState({ execution_input: this.formatInput(input), execution_output: output || (output===0?output:'Пусто') })
-  }
-
-  formatInput(string){
-    return (string.split !== undefined?string.split(', ').join('\n').slice(1,-1):string)
+  exampleTest(){
+    let [input, output] = this.test(this.state.task.languagesSpecificData[this.state.language].exampleSolution)
+    this.setState({example_input: this.formatInput(input),
+                   example_output: output})
   }
 
   test(f, specified_input = undefined, display_output = true){
-    let input = specified_input || this.task.inputFillFunction()
-    let executed_code = `${f}\n solution(${input})`
+    let input = undefined, output = undefined;
+    switch(this.state.language){
+      case 'javascript':
+        [input, output] = this.runcode(f, (executed_code) => eval(executed_code), specified_input, display_output)
+        break;
+
+      case 'python':
+        [input, output] = this.runcode(f, (executed_code) => window.python_compile(executed_code), specified_input, display_output)
+        break;
+    }
+    return [input, output]
+  }
+
+  runcode(f, compiler, specified_input = undefined, display_output = true){
+    let input = specified_input || this.state.task.languagesSpecificData[this.state.language].inputFillFunction()
+    let executed_code = {
+      'javascript': `${f}\n solution(${input})`,
+      'python': `${f}\n__OUTPUT__ = solution(${input})`
+    }[this.state.language]
     let output;
     try {
-      output = eval(executed_code)
+      output = compiler(executed_code)
       if(display_output)
         this.setState({execution_output_type: [undefined, null, ''].includes(output)?'empty':'default'})
       output = output || (output===0?output:'Пусто')
@@ -158,108 +146,202 @@ class Excercise15 extends React.Component {
       if(display_output)
         this.setState({execution_output_type: 'error'})
     }
-    //input = input.split(',')
     return [input, output]
   }
 
-  toggle(){
-    this.setState({resetConfirmationModalOpen: false})
+  handleExecute(){
+    let [input, output] = this.test(this.state.value)
+    this.setState({ execution_input: this.formatInput(input), execution_output: output || (output===0?output:'Пусто') })
   }
 
-  handleReset(){
-    this.setState({value: this.defaultCode})
-    this.toggle()
+  formatInput(string){
+    return (string !== undefined && string.split !== undefined?string.split(', ').join('\n').slice(1,-1):string)
   }
 
   testUserSolution(){
     let userSolution = this.state.value
     for (var i = 0; i < 10; i++) {
       let [inputToUserSolution, outputFromUserSolution] = this.test(userSolution, undefined, false)
-      let [, correctOutput] = this.test(this.exampleSolution.toString(), inputToUserSolution.split(' \n'), false)
+      let [, correctOutput] = this.test(this.state.task.languagesSpecificData[this.state.language].exampleSolution.toString(),
+                                          inputToUserSolution.split(' \n'), false)
       if(outputFromUserSolution != correctOutput) return false
     }
     return true
   }
 
+  resetModalToggle(){
+    this.setState({resetConfirmationModalOpen: false})
+  }
+
+  handleResetOffer(){
+    if(this.hasDefaultValue()){
+      this.resetToDefault()
+    } else {
+      this.setState({resetConfirmationModalOpen: true})
+    }
+  }
+
+  handleReset(){
+    this.resetModalToggle()
+    this.resetToDefault()
+  }
+
+  resetToDefault(){
+    this.setState({value: this.getDefaultCode(this.state.language)})
+  }
+
+  dropDownToggle(){
+    this.setState({dropdownOpen: !this.state.dropdownOpen})
+  }
+
+  setLanguage(language){
+    if(language != this.state.language){
+      if(language == 'python' && !window.plugins_loaded){
+        this.setState({
+          pythonCompilerLoading: 'flex'
+        })
+        let ref = this
+        window.python_load_compiler()
+        let intervalLoop = setInterval(() => {
+          if(window.plugins_loaded){
+            ref.setLanguageState(language)
+            ref.setState({
+              pythonCompilerLoading: 'none'
+            })
+            clearInterval(intervalLoop)
+          }
+        }, 10)
+      } else {
+        this.setLanguageState(language)
+      }
+    }
+  }
+
+  setLanguageState(language){
+    let setDefaultCode = {}
+    if(this.hasDefaultValue()){
+      setDefaultCode.value = this.getDefaultCode(language)
+    }
+
+    this.setState({
+        task: this.generateDataForTask(this.sourceTask, language, this),
+        language: language,
+        ...setDefaultCode
+      }, this.exampleTest)
+  }
+
+  hasDefaultValue(){
+    return this.getDefaultCode(this.state.language) == this.state.value
+  }
+
   render(){
     const tdstyles = {flex: 0, padding: 0, paddingRight: '15px'}
+    const compilerLoaderStyles = {position: 'absolute',
+                                  width: '100%',
+                                  height: '100%',
+                                  flexDirection: 'column',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                  backgroundColor: '#eeeeee',
+                                  zIndex: 9}
 
     return (
-      <div style={{overflow: 'auto'}}>
-        <p>
-          {this.task.text}
-        </p>
-        <b>Пример работы программы:</b>{'\n'}
-        <table className="table table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">Входные данные</th>
-              <th scope="col">Выходные данные</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{maxWidth: '30vw', overflowX: 'auto'}}><pre>{this.example_input}</pre></td>
-              <td><pre>{this.example_output}</pre></td>
-            </tr>
-          </tbody>
-        </table>
-        <Card>
-          <CardBody>
-            <table style={{width: '100%'}}>
-              <tbody>
-                <tr>
-                  <td colspan={2} style={{paddingBottom: '15px'}}>
-                    <div style={{display: 'flex', alignItems: 'center'}}>
+      <div style={{position: 'relative'}}>
+        <div style={{...compilerLoaderStyles, display: this.state.pythonCompilerLoading}}>
+          <h3>Загрузка компилятора Python...</h3>
+          <p className='text-muted'>Это может занять некоторое время</p>
+        </div>
+        <div style={{overflow: 'auto'}}>
+          <p>
+            {this.state.task.text}
+          </p>
+          <p>
+            <b>Пример работы программы:</b>
+          </p>
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Входные данные</th>
+                <th scope="col">Выходные данные</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style={{maxWidth: '30vw', overflowX: 'auto'}}><pre>{this.state.example_input}</pre></td>
+                <td><pre>{this.state.example_output}</pre></td>
+              </tr>
+            </tbody>
+          </table>
+          <Card>
+            <CardBody>
+              <table style={{width: '100%'}}>
+                <tbody>
+                  <tr>
+                    <td colspan={2} style={{paddingBottom: '15px'}}>
+                      <div style={{display: 'flex', alignItems: 'center'}}>
                         <div style={tdstyles}>
-                          <Button color='danger' onClick={() => this.setState({resetConfirmationModalOpen: true})}>Восстановить </Button>
+                          <Dropdown isOpen={this.state.dropdownOpen} toggle={() => this.dropDownToggle()}>
+                            <DropdownToggle caret style={{backgroundColor: '#6f42c1'}} className='dropdown-purple'>
+                              {languageNames[this.state.language]}
+                            </DropdownToggle>
+                            <DropdownMenu dark>
+                              <DropdownItem header>Язык компиляции</DropdownItem>
+                              <DropdownItem onClick={() => this.setLanguage('javascript')}>{languageNames['javascript']}</DropdownItem>
+                              <DropdownItem onClick={() => this.setLanguage('python')}>{languageNames['python']}</DropdownItem>
+                            </DropdownMenu>
+                          </Dropdown>
+                        </div>
+                        <div style={tdstyles}>
+                          <Button color='danger' onClick={() => this.handleResetOffer()}>Восстановить </Button>
                           <ResetConfirmationModal open={this.state.resetConfirmationModalOpen}
-                                                  toggle={() => this.toggle()}
+                                                  toggle={() => this.resetModalToggle()}
                                                   handleReset={() => this.handleReset()}/>
                         </div>
                         <div style={tdstyles}>
-                          <Button color="primary" onClick={() => this.execute()}>Запустить</Button>
+                          <Button color="primary" onClick={() => this.handleExecute()}>Запустить</Button>
                         </div>
                         <div style={{...tdstyles, flex: 1}}>
                           <label className="text-muted">Количество запусков не влияет на оценку</label>
                         </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr style={{verticalAlign: 'top', height: '50%'}}>
-                  <td rowspan={2} className='col-6' style={{paddingLeft: 0, width: '50%'}}>
-                    <div style={{width: '30vw'}}>
-                      <CodeMirror
-                        value={this.state.value}
-                        options={{
-                          mode: 'javascript',
-                          theme: 'material-ocean',
-                          lineNumbers: true
-                        }}
-                        onBeforeChange={(editor, data, value) => {
-                          this.setState({value});
-                        }}
-                        ref={this.codemirrorRef}
-                      />
-                    </div>
-                  </td>
-                  <td style={{display: 'inline-block', maxWidth: '30vw', overflowX: 'auto'}}>
-                    <b>Входные данные:</b>
-                    <pre>{this.state.execution_input}</pre>
-                  </td>
-                </tr>
-                <tr style={{verticalAlign: 'top', height: '50%'}}>
-                  <td>
-                    <b>Выходные данные:</b>
-                    <pre style={{fontStyle: this.state.execution_output_type==='empty'?'italic':'normal',
-                                 color: this.state.execution_output_type==='empty'?'#999':
-                                 (this.state.execution_output_type==='error'?'#f00':'revert')}}>{this.state.execution_output}</pre>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </CardBody>
-        </Card>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr style={{verticalAlign: 'top', height: '50%'}}>
+                    <td rowspan={2} className='col-6' style={{paddingLeft: 0, width: '50%'}}>
+                      <div style={{width: '30vw'}}>
+                        <CodeMirror
+                          value={this.state.value}
+                          options={{
+                            mode: this.state.language,
+                            theme: 'material-ocean',
+                            lineNumbers: true
+                          }}
+                          onBeforeChange={(editor, data, value) => {
+                            this.setState({value});
+                          }}
+                          ref={this.codemirrorRef}
+                        />
+                      </div>
+                    </td>
+                    <td style={{display: 'inline-block', maxWidth: '30vw', overflowX: 'auto'}}>
+                      <b>Входные данные:</b>
+                      <pre>{this.state.execution_input}</pre>
+                    </td>
+                  </tr>
+                  <tr style={{verticalAlign: 'top', height: '50%'}}>
+                    <td>
+                      <b>Выходные данные:</b>
+                      <pre style={{fontStyle: this.state.execution_output_type==='empty'?'italic':'normal',
+                                   color: this.state.execution_output_type==='empty'?'#999':
+                                   (this.state.execution_output_type==='error'?'#f00':'revert'),
+                                   maxWidth: '30vw', overflowX: 'auto'}}>{this.state.execution_output}</pre>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </CardBody>
+          </Card>
+        </div>
       </div>
     )
   }
@@ -285,6 +367,5 @@ class ResetConfirmationModal extends React.Component {
     )
   }
 }
-
 
 export default Excercise15
