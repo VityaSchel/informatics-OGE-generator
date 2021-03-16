@@ -1,7 +1,21 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import utils from '../../utils.js'
 
-function Excercise11(props) {
+class Excercise11 extends React.Component {
+  constructor (props){
+    super(props);
+
+    this.answer = undefined
+  }
+
+  render(){
+    return (
+      <Excercise11Inner {...this.props} setanswer={_answer => this.answer = utils.encodeAnswer(_answer)}/>
+    )
+  }
+}
+
+function Excercise11Inner(props) {
   let [extraFiles, setExtraFiles] = React.useState(false)
   window.genCallback2 = setExtraFiles
 
@@ -13,7 +27,7 @@ function Excercise11(props) {
         )
         :
         (
-          <Text />
+          <Text setanswer={answer => props.setanswer(answer)} />
         )
       }
     </>
@@ -32,7 +46,7 @@ class Text extends React.Component {
     let subFolders = window.appData.extraFiles[this.topFolder]
     let subFolderFiles = utils.randomItem(Object.values(subFolders))
     let [answer, fileContent] = utils.randomItem(Object.entries(subFolderFiles))
-    this.answer = answer
+    this.props.setAnswer(answer)
     this.fileContent = fileContent
     this.quote = utils.randomItem(fileContent.split('. '))
   }

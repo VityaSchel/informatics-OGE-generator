@@ -1,5 +1,5 @@
 import React from 'react'
-import { InputGroup, InputGroupText, Input } from 'reactstrap'
+import { Button, InputGroup, InputGroupText, Input } from 'reactstrap'
 import styles from '../styles/Excercises.style.js'
 import '../styles/Excercises.css'
 import Excercise1 from './Excercises/Excercise1.react.js'
@@ -62,59 +62,66 @@ class ExcerciseText extends React.Component {
   }
 
   render(){
-    switch(this.props.number){
-      case 1:
-        return <Excercise1 />
-
-      case 2:
-        return <Excercise2 />
-
-      case 3:
-        return <Excercise3 />
-
-      case 4:
-        return <Excercise4 />
-
-      case 5:
-        return <Excercise5 />
-
-      case 6:
-        return <Excercise6 />
-
-      case 7:
-        return <Excercise7 />
-
-      case 8:
-        return <Excercise8 />
-
-      case 9:
-        return <Excercise9 />
-
-      case 10:
-        return <Excercise10 />
-
-      case 11:
-        return <Excercise11 />
-
-      case 12:
-        return <Excercise12 />
-
-      case 13:
-        return <Excercise13 />
-
-      case 14:
-        return <Excercise14 />
-
-      case 15:
-        return <Excercise15 />
-
-      default:
-        return <p>?</p>
-    }
+    let e = getExcercise(this.props.number)
+    window.appData.components[this.props.number] = e
+    return e
   }
 }
 
 window.appData = {}
+window.appData.components = Array(16).fill().map(r => React.createRef())
+function getExcercise(number){
+  switch(number){
+    case 1:
+      return <Excercise1 ref={window.appData.components[1]}/>
+
+    case 2:
+      return <Excercise2 ref={window.appData.components[2]}/>
+
+    case 3:
+      return <Excercise3 ref={window.appData.components[3]}/>
+
+    case 4:
+      return <Excercise4 ref={window.appData.components[4]}/>
+
+    case 5:
+      return <Excercise5 ref={window.appData.components[5]}/>
+
+    case 6:
+      return <Excercise6 ref={window.appData.components[6]}/>
+
+    case 7:
+      return <Excercise7 ref={window.appData.components[7]}/>
+
+    case 8:
+      return <Excercise8 ref={window.appData.components[8]}/>
+
+    case 9:
+      return <Excercise9 ref={window.appData.components[9]}/>
+
+    case 10:
+      return <Excercise10 ref={window.appData.components[10]}/>
+
+    case 11:
+      return <Excercise11 ref={window.appData.components[11]}/>
+
+    case 12:
+      return <Excercise12 ref={window.appData.components[12]}/>
+
+    case 13:
+      return <Excercise13 ref={window.appData.components[13]}/>
+
+    case 14:
+      return <Excercise14 ref={window.appData.components[14]}/>
+
+    case 15:
+      return <Excercise15 ref={window.appData.components[15]}/>
+
+    default:
+      return <p>?</p>
+  }
+}
+
 window.appData.answers = {}
 class ExcerciseAnswer extends React.Component {
   constructor (props){

@@ -32,6 +32,8 @@ class Excercise6 extends React.Component {
     this.answer += this.segments.indexOf('/')+1
     this.answer += this.segments.indexOf(this.filename.split('.')[0]+'.')+1
     this.answer += this.segments.indexOf(this.filename.split('.')[1])+1
+    
+    this.answer = utils.encodeAnswer(this.answer)
   }
 
   render(){

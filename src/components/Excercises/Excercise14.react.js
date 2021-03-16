@@ -9,6 +9,9 @@ class Excercise14 extends React.Component {
   constructor (props){
     super(props);
     this.generateExcerciseData()
+
+    this.answer14_1 = utils.encodeAnswer(this.condition[0].answer)
+    this.answer14_2 = utils.encodeAnswer(this.condition[1].answer)
   }
 
   generateExcerciseData(){
@@ -52,11 +55,10 @@ class Excercise14 extends React.Component {
     let content = []
     let data = this.data
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    for (let i in columns.descriptions){
-      let description = columns.descriptions[i]
+    for (let [i, description] of Object.entries(columns.descriptions)){
       let letter = letters.charAt(i)
 
-      content.push(<div key={i}>В столбце {letter} {i==0?'записан':'—'} {description}{i==columns.length-1?'.':';'}</div>)
+      content.push(<div key={i}>В столбце {letter} {i==0?'записан':'—'} {description}{i==columns.descriptions.length-1?'.':';'}</div>)
     }
     this.contentColumns = content
     this.tablePreview = <table className="table table-bordered">
@@ -114,7 +116,7 @@ class Excercise14 extends React.Component {
       }
     }).filter(row => row !== undefined)
     let studentsSum = students.reduce((last, cur) => last+cur, 0)
-    this.condition[1].answer = Math.floor(studentsSum / students.length)
+    this.condition[1].answer = (studentsSum / students.length).toFixed(2)
 
     this.tasks = <ol>
       <li>

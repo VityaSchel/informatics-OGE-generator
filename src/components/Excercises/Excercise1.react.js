@@ -33,16 +33,15 @@ class Excercise1 extends React.Component {
       listOfAnimals.push(utils.randomItem(possibleWords))
     }
     listOfAnimals[0] = utils.capitalize(listOfAnimals[0])
-
     this.answer = listOfAnimals.find(animal => {
       if(animal.length === this.symbolsRemoved){return animal}
     })
     this.removedNameBits = (this.symbolsRemoved+2)*this.symbolEncodingSizeInBits
-
     const commaAndSpaceSymbols = 2
     this.symbolsRemoved += commaAndSpaceSymbols
-
     this.writtenText = `${listOfAnimals.join(', ')} – животные`
+
+    this.answer = utils.encodeAnswer(this.answer)
   }
 
   render(){

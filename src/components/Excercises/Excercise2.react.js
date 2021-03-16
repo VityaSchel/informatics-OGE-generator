@@ -1,5 +1,6 @@
 import React from 'react'
 import { Table } from 'reactstrap'
+import utils from '../../utils.js'
 
 class Excercise2 extends React.Component {
   constructor (props){
@@ -21,6 +22,9 @@ class Excercise2 extends React.Component {
 
     let lookForReversed = true
     this.alternativeSolution = this.findAllSolutions(this.encodedMessage, lookForReversed)
+    this.answer = [utils.encodeAnswer(this.decodedMessage)]
+    if(this.alternativeSolution)
+      this.answer.push(utils.encodeAnswer(this.alternativeSolution))
   }
 
   findAllSolutions(encodedMessage, lookForReversed = false){

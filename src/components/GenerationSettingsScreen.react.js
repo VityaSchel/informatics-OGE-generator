@@ -69,7 +69,7 @@ class Generator extends React.Component {
           <Button color="secondary" onClick={() => this.props.ongenerate(this.refSeed)}>Сгенерировать</Button>
         </InputGroup>
         {'\n'}
-        <Input placeholder="seed варианта (необязательно)" innerRef={this.refSeed} />
+        <Input placeholder="seed варианта (необязательно)" innerRef={this.refSeed} maxLength={20} />
       </>
     )
   }

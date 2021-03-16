@@ -1,3 +1,5 @@
+import md5 from 'md5'
+
 const utils = {
   shuffle: function(array) {
     for (var i = array.length - 1; i > 0; i--) {
@@ -93,7 +95,66 @@ const utils = {
     let shrinkedPoint2Y = y2 + crossHeightOffset + crossHeightShrink
 
     return [[shrinkedPoint1X, shrinkedPoint2Y], [shrinkedPoint2X, shrinkedPoint1Y]]
+  },
+
+  encodeAnswer: function(answer){
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      pushAnswerToDebug(answer)
+    }
+
+    const salt = '🧂🧂🧂 SALT !!! :D 🧂🧂🧂'
+    if(answer === undefined) {
+      return answer
+    } else {
+      let _answer = String(answer).toLowerCase()
+      return md5(_answer+salt)
+    }
+  },
+
+
+  ending: function(digit){
+    digit = Number(digit)
+    if(digit % 10 == 0 || digit.isBetween(11, 14)){
+      return 'ов'
+    } else if(digit % 10 == 1 && digit !== 11) {
+      return ''
+    } else if((digit % 10).isBetween(2,4)) {
+      return 'а'
+    } else {
+      return 'ов'
+    }
+  },
+
+  copyText: function(string){
+    let _tmpinput = document.createElement('textarea')
+    _tmpinput.style = {
+      'display': 'none'
+    }
+    document.body.appendChild(_tmpinput)
+    _tmpinput.value = string
+    _tmpinput.select()
+    _tmpinput.setSelectionRange(0, 99999)
+    document.execCommand("copy")
+    _tmpinput.remove()
   }
+}
+
+Number.prototype.isBetween = function(min_inclusive, max_inclusive){
+  return (this >= min_inclusive && this <= max_inclusive)
+}
+
+Array.prototype.last = function(){
+  return this[this.length-1]
+}
+
+function pushAnswerToDebug(answer){
+  if(window.appData.DEBUG === undefined){
+    window.appData.DEBUG = {}
+  }
+  if(window.appData.DEBUG.answers === undefined){
+    window.appData.DEBUG.answers = []
+  }
+  window.appData.DEBUG.answers.push(answer)
 }
 
 export default utils

@@ -54,6 +54,14 @@ class Excercise15 extends React.Component {
 
   componentDidMount(){
     this.generateExcerciseData()
+    let ref = this
+    window.addEventListener('keydown', event => {
+      if(event.key === 'Enter'){
+        if(event.metaKey || event.ctrlKey){
+          document.querySelector('#execute_excercise15').click()
+        }
+      }
+    })
   }
 
   generateExcerciseData(){
@@ -130,7 +138,7 @@ class Excercise15 extends React.Component {
   }
 
   runcode(f, compiler, specified_input = undefined, display_output = true){
-    let input = specified_input || this.state.task.languagesSpecificData[this.state.language].inputFillFunction()
+    let input = specified_input ?? this.state.task.languagesSpecificData[this.state.language].inputFillFunction()
     let executed_code = {
       'javascript': `${f}\n solution(${input})`,
       'python': `${f}\n__OUTPUT__ = solution(${input})`
@@ -140,7 +148,7 @@ class Excercise15 extends React.Component {
       output = compiler(executed_code)
       if(display_output)
         this.setState({execution_output_type: [undefined, null, ''].includes(output)?'empty':'default'})
-      output = output || (output===0?output:'Пусто')
+      output = this.formatOutput(output)
     } catch (e) {
       output = 'Ошибка:\n'+e
       if(display_output)
@@ -151,22 +159,36 @@ class Excercise15 extends React.Component {
 
   handleExecute(){
     let [input, output] = this.test(this.state.value)
-    this.setState({ execution_input: this.formatInput(input), execution_output: output || (output===0?output:'Пусто') })
+    this.setState({ execution_input: this.formatInput(input), execution_output: this.formatOutput(output) })
   }
 
   formatInput(string){
     return (string !== undefined && string.split !== undefined?string.split(', ').join('\n').slice(1,-1):string)
   }
 
+  formatOutput(string){
+    if(string === '')
+      return 'Пусто'
+    else
+      return string ?? 'Пусто'
+  }
+
   testUserSolution(){
+    let failedTests = 0
     let userSolution = this.state.value
     for (var i = 0; i < 10; i++) {
       let [inputToUserSolution, outputFromUserSolution] = this.test(userSolution, undefined, false)
       let [, correctOutput] = this.test(this.state.task.languagesSpecificData[this.state.language].exampleSolution.toString(),
                                           inputToUserSolution.split(' \n'), false)
-      if(outputFromUserSolution != correctOutput) return false
+      if(outputFromUserSolution != correctOutput) failedTests++
     }
-    return true
+    if(failedTests === 0) {
+      return true
+    } else if(failedTests === 10){
+      return false
+    } else {
+      return 'tests failed: '+failedTests
+    }
   }
 
   resetModalToggle(){
@@ -298,7 +320,7 @@ class Excercise15 extends React.Component {
                                                   handleReset={() => this.handleReset()}/>
                         </div>
                         <div style={tdstyles}>
-                          <Button color="primary" onClick={() => this.handleExecute()}>Запустить</Button>
+                          <Button color="primary" onClick={() => this.handleExecute()} style={{width: 'max-content'}} id='execute_excercise15'>Запустить <kbd><kbd>{navigator.userAgent.includes('Mac OS X')?'⌘':'Ctrl'}</kbd> + <kbd>Enter</kbd></kbd></Button>
                         </div>
                         <div style={{...tdstyles, flex: 1}}>
                           <label className="text-muted">Количество запусков не влияет на оценку</label>
@@ -355,7 +377,7 @@ class ResetConfirmationModal extends React.Component {
   render(){
     return (
       <Modal isOpen={this.props.open} toggle={() => this.props.toggle()}>
-        <ModalHeader toggle={() => this.props.toggle()}>Вы уверены?</ModalHeader>
+        <ModalHeader toggle={() => this.props.toggle()}>Восстановить код?</ModalHeader>
         <ModalBody>
           Вы действительно хотите вернуть поле для ввода кода в исходное состояние?
         </ModalBody>

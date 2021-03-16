@@ -23,6 +23,7 @@ class Excercise10 extends React.Component {
     this.integers = utils.shuffle(this.integers)
 
     this.answer = Math.max(...decodedIntegers)
+    this.answer = utils.encodeAnswer(this.answer)
   }
 
   render(){

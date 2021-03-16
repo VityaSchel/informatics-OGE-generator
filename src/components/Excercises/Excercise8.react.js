@@ -59,6 +59,8 @@ class Excercise8 extends React.Component {
     let both = pages.filter(page => page === 'both').length
     let term = pages.filter(page => page === (this.termShown?this.term1:this.term2)).length
     this.answer = (or - term + both) * 10
+
+    this.answer = utils.encodeAnswer(this.answer)
   }
 
   render(){

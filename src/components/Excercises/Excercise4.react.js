@@ -15,6 +15,7 @@ class Excercise4 extends React.Component {
     this.mediumPoint = utils.randomItem(this.pointNames)
     this.endingPoint = utils.randomItem(this.pointNames)
     this.solve(this.points, this.startingPoint, this.mediumPoint, this.endingPoint)
+    this.answer = utils.encodeAnswer(this.answer)
   }
 
   solve(pointsWithRoads, start, medium, end){

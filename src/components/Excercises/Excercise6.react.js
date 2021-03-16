@@ -53,6 +53,7 @@ class Excercise6 extends React.Component {
     }
     this.answer = this.executionsOutput.filter(output => output === this.neededOutput).length
     this.executions = this.executions.map(execution => `(${execution[0]}, ${execution[1]})`).join('; ')
+    this.answer = utils.encodeAnswer(this.answer)
   }
 
   render(){

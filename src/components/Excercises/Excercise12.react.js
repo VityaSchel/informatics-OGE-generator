@@ -1,7 +1,21 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import utils from '../../utils.js'
 
-function Excercise12(props) {
+class Excercise12 extends React.Component {
+  constructor (props){
+    super(props);
+
+    this.answer = undefined
+  }
+
+  render(){
+    return (
+      <Excercise12Inner {...this.props} setanswer={_answer => this.answer = utils.encodeAnswer(_answer)}/>
+    )
+  }
+}
+
+function Excercise12Inner(props) {
   let [extraFiles, setExtraFiles] = React.useState(false)
   window.genCallback = setExtraFiles
 
@@ -13,7 +27,7 @@ function Excercise12(props) {
         )
         :
         (
-          <Text />
+          <Text setanswer={answer => props.setanswer(answer)} />
         )
       }
     </>
@@ -31,12 +45,13 @@ class Text extends React.Component {
     this.extension = utils.randomItem(window.appData.extraFileExtensions)
     this.topFolder = utils.randomItem(Object.keys(window.appData.extraFiles))
     let subFolders = window.appData.extraFiles[this.topFolder]
-    this.answer = 0
+    let answer = 0
     for (let folder of Object.keys(subFolders)){
       let filenames = Object.keys(subFolders[folder])
       let regex = new RegExp('^.*\\'+this.extension+'$')
-      this.answer += filenames.filter(filename => regex.test(filename)).length
+      answer += filenames.filter(filename => regex.test(filename)).length
     }
+    this.props.setAnswer(answer)
   }
 
   render(){

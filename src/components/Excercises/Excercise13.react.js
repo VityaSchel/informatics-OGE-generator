@@ -15,6 +15,7 @@ class Excercise13 extends React.Component {
     super(props);
 
     this.generateExcerciseData()
+    this.answer = utils.encodeAnswer(this.answer)
   }
 
   generateExcerciseData(){

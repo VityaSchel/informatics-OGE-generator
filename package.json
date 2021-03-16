@@ -15,6 +15,7 @@
     "file-saver": "^2.0.5",
     "html2canvas": "^1.0.0-rc.7",
     "jszip": "^3.6.0",
+    "md5": "^2.3.0",
     "package-info": "^4.0.0",
     "random-words": "^1.1.1",
     "randomstring": "^1.1.5",

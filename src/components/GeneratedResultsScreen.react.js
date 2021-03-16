@@ -1,10 +1,12 @@
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import styles from '../styles/GeneratedResultsScreen.style.js'
-import { BsClipboard } from "react-icons/bs"
+import { BsCheck, BsClipboard } from "react-icons/bs"
 import { Alert, Button, Card, CardBody, Progress } from 'reactstrap'
 import Excercises from './Excercises.react.js'
+import AnswerChecker from './AnswerChecker.react.js'
 import '../extraFiles.js'
+import utils from '../utils.js'
 
 let seed;
 
@@ -18,7 +20,7 @@ class GeneratedResultsScreen extends React.Component {
   render(){
     return (
       <>
-        <Header />
+        <Header seedRef={this.props.seedRef}/>
         <GeneratedExcercises />
       </>
     )
@@ -32,8 +34,12 @@ class Header extends React.Component {
 
   render(){
     return (
-      <div styles={styles.header}>
-        <label>сид рандомайзера: {seed} <Copy /></label>
+      <div style={styles.header}>
+        <label>
+          <label>Сид рандомайзера: {seed}</label>
+          <label className="text-warning">{this.props.seedRef?.current?.value !== ''?' (установлен вручную)':''}</label>
+          <Copy seed={seed}/>
+        </label>
       </div>
     )
   }
@@ -42,17 +48,28 @@ class Header extends React.Component {
 class Copy extends React.Component {
   constructor (props){
     super(props);
+
+    this.state = {
+      copied: false
+    }
   }
 
-  copySeed(){
-    alert(seed)
+  copySeed(e){
+    e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
+    if(e.target === e.currentTarget){
+      this.setState({copied: true})
+      utils.copyText(this.props.seed)
+    }
   }
 
   render(){
     return (
-      <Button color="light" onClick={() => this.copySeed()}>
-        <BsClipboard />
-      </Button>
+      <div style={styles.button}>
+        <Button color="light" onClick={e => this.copySeed(e)}>
+          {this.state.copied?<BsCheck />:<BsClipboard />}
+        </Button>
+      </div>
     )
   }
 }
@@ -64,12 +81,13 @@ class GeneratedExcercises extends React.Component {
 
   render(){
     return (
-      <div className="container">
+      <div className="container" style={{'margin-top': '1em'}}>
         <div className="row">
           <div className="col">{' '}</div>
             <div className="col-10">
               <Section number={1} />
               <Section number={2} />
+              <AnswerChecker />
             </div>
           <div className="col">{' '}</div>
         </div>
