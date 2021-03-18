@@ -22,55 +22,101 @@ class Excercise9 extends React.Component {
     this.canvasContext = this.canvasRef.current.getContext('2d')
     this.generateExcerciseData()
     this.setState({generated: true})
-    this.answer = utils.encodeAnswer(this.answer)
   }
 
   generateInput(){
-    const format = [
-                    [{point: 'A', ref: ['B', 'D']}],
-                    [{point: 'B', ref: ['E']}, {point: 'C', ref: ['E']}, {point: 'D', ref: ['C', 'E']}],
-                    [{point: 'E', ref: ['F', 'G']}, {point: 'G', ref: ['F']}],
-                    [{point: 'F', ref: []}]
-                   ]
-    let pointIndex = -1
+    let _globalThis = this
+
+    function generatePoints(){
+      let pointIndex = -1
+      let input = Array(inputLen).fill().map((col, i) => {
+        return Array((i==0 || i == inputLen-1) ? 1 : utils.random(2,4)).fill().map(p => {
+          pointIndex++
+          return {point: pointNames[pointIndex], ref: []}
+        })
+      })
+      return input
+    }
+
+    function generateArrows(input){
+      input.map((col, colIndex, colArray) => {
+        col.map(point => {
+          if(colIndex == 0) {
+            let nextCol = colArray[colIndex+1]
+            let pointRefs = Array(utils.random(1,nextCol.length)).fill().map(() => utils.randomItem(nextCol).point)
+            point.ref.push(...pointRefs)
+          } else if(colIndex !== inputLen-1){
+            point.ref.push(utils.randomItem(colArray[colIndex+1]).point)
+          }
+        })
+        if(utils.random(0, 1) && col.length >= 2){
+          let point1Index = utils.random(0, col.length-1)
+          let randomSameColPoint1 = col[point1Index]
+          let randomSameColPoint2 = col[point1Index+1]
+          if(point1Index+1 >= col.length){
+            randomSameColPoint2 = col[point1Index-1]
+          }
+          randomSameColPoint1.ref.push(randomSameColPoint2.point)
+        }
+      })
+      return input
+    }
+
+    function countRefs(input){
+      input.map((col, colIndex, colArray) => {
+        if(colIndex == 0){
+          let starterPoint = col[0]
+          starterPoint.ref.forEach(ref => {
+            _globalThis.getPoint(ref).hasStarterPointPath = true
+          })
+          return col;
+        } else if (colIndex == 1) {
+          col.forEach(point => {
+            if(point.hasStarterPointPath)
+              point.refsCount = 1
+          })
+        } else {
+          let newCol = col.map(point => {
+            let pointName = point.point
+            let refsCount = 0
+            let hasStarterPointPath = false
+            let parentRefs = _globalThis.getPoints().filter(_point => _point.ref.includes(pointName))
+            parentRefs.forEach(parentRefPoint => {
+              if(parentRefPoint.hasStarterPointPath){
+                refsCount += parentRefPoint.refsCount
+                hasStarterPointPath = true
+              }
+            })
+            point.hasStarterPointPath = hasStarterPointPath
+            point.refsCount = refsCount
+          })
+          return newCol
+        }
+      })
+    }
+
     let inputLen = utils.random(4,6)
-    let input = Array(inputLen).fill().map((col, i) => {
-      return Array((i==0 || i == inputLen-1) ? 1 : utils.random(2,4)).fill().map(p => {
-        pointIndex++
-        return {point: pointNames[pointIndex], ref: []}
-      })
-    })
+    let input = generatePoints()
+    input = generateArrows(input)
+    this.data = input
+    countRefs(input)
 
-    input.map((col, colIndex, colArray) => {
-      col.map(point => {
-        if(colIndex !== inputLen-1){
-          point.ref.push(utils.randomItem(colArray[colIndex+1]).point)
-        }
-      })
-      if(utils.random(0, 1) && col.length >= 2){
-        let point1Index = utils.random(0, col.length-1)
-        let randomSameColPoint1 = col[point1Index]
-        let randomSameColPoint2 = col[point1Index+1]
-        if(point1Index+1 >= col.length){
-          randomSameColPoint2 = col[point1Index-1]
-        }
-        randomSameColPoint1.ref.push(randomSameColPoint2.point)
-      }
-    })
+    this.answer = utils.encodeAnswer(input.last()[0].refsCount)
 
-    return input
+    return this.data
   }
 
   generateExcerciseData(){
-    this.drawEllipses()
+    let input = this.generateInput()
+    this.drawEllipses(input)
+    this.drawArrows(input)
   }
 
-  drawEllipses(){
+  drawEllipses(input){
     let radius = 5
     this.canvasContext.font = "bold 9px sans-serif";
-    let input = this.generateInput()
-    let dataCopy = Object.assign({}, input)
-    let cols = input.length
+    let dataCopy = input
+    let cols = dataCopy.length
     let colsInterval = (this.canvasWidth-(this.horizontalOffset*2)) / cols
     for (let [colIndex, col] of Object.entries(input)){
       let x = colsInterval*colIndex+this.horizontalOffset
@@ -90,12 +136,10 @@ class Excercise9 extends React.Component {
         this.canvasContext.fillText(point.point, x-3, y+3);
       }
     }
-    this.data = Object.values(dataCopy)
-    this.drawArrows()
   }
 
-  drawArrows(){
-    let dataCopy = this.data
+  drawArrows(input){
+    let dataCopy = input
     for (let col of dataCopy){
       for (let point of col){
         let refs = point.ref ?? []

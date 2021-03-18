@@ -53,11 +53,45 @@ class AnswerChecker extends React.Component {
   }
 
   checkAnswers(){
+    function check13excercise(){
+      let score = window.appData.components[13].ref.current.testUserInput()
+      return {
+        index: 13,
+        isCorrect: score > 0,
+        score: score
+      }
+    }
+
+    function check14excercise(){
+      let correctAnswer14_1 = window.appData.components[14].ref.current.answer14_1
+      let userAnswer14_1 = window.appData.answers[14.1] ?? ''
+      userAnswer14_1 = utils.encodeAnswer(userAnswer14_1)
+
+      let correctAnswer14_2 = window.appData.components[14].ref.current.answer14_2
+      let userAnswer14_2 = window.appData.answers[14.2] ?? ''
+      userAnswer14_2 = utils.encodeAnswer(userAnswer14_2)
+
+      let isCorrect14_1 = correctAnswer14_1===userAnswer14_1
+      let isCorrect14_2 = correctAnswer14_2===userAnswer14_2
+      return {
+        index: 14,
+        isCorrect14_1: isCorrect14_1,
+        isCorrect14_2: isCorrect14_2,
+        isCorrect: isCorrect14_1+isCorrect14_2 > 0
+      }
+    }
+
+    function check15excercise(){
+      let tests = window.appData.components[15].ref.current.testUserSolution()
+      let testCorrect = Boolean(tests)
+      return {index: 15, isCorrect: testCorrect, allTestsPassing: tests===true}
+    }
+
     if(this.revalidationProtection){return;}
     this.revalidationProtection = true;
     _setModal(false)
     let data = [];
-    for (let i = 1; i <= 13; i++){
+    for (let i = 1; i <= 12; i++){
       let correctAnswer = window.appData.components[i].ref.current.answer
       let userAnswer = window.appData.answers[i] ?? ''
       userAnswer = utils.encodeAnswer(userAnswer)
@@ -70,26 +104,10 @@ class AnswerChecker extends React.Component {
       data.push({index: i, isCorrect: isCorrect})
     }
 
-    let correctAnswer14_1 = window.appData.components[14].ref.current.answer14_1
-    let userAnswer14_1 = window.appData.answers[14.1] ?? ''
-    userAnswer14_1 = utils.encodeAnswer(userAnswer14_1)
+    data.push(check13excercise())
+    data.push(check14excercise())
+    data.push(check15excercise())
 
-    let correctAnswer14_2 = window.appData.components[14].ref.current.answer14_2
-    let userAnswer14_2 = window.appData.answers[14.2] ?? ''
-    userAnswer14_2 = utils.encodeAnswer(userAnswer14_2)
-
-    let isCorrect14_1 = correctAnswer14_1===userAnswer14_1
-    let isCorrect14_2 = correctAnswer14_2===userAnswer14_2
-    data.push({
-      index: 14,
-      isCorrect14_1: isCorrect14_1,
-      isCorrect14_2: isCorrect14_2,
-      isCorrect: isCorrect14_1+isCorrect14_2 > 0
-    })
-
-    let tests = window.appData.components[15].ref.current.testUserSolution()
-    let testCorrect = Boolean(tests)
-    data.push({index: 15, isCorrect: testCorrect, allTestsPassing: tests===true})
     this.setState({validationEnded: true, validationData: data})
   }
 
@@ -144,10 +162,6 @@ class ValidationResults extends React.Component {
     }
 
     const oneScoredExcercises = 12
-    const doubleScoredExcercises = 15
-    const threeScoredExcercise = 14
-    const oneScore = 1
-    const doubleScore = 2
 
     let excercises = []
     let score = 0
@@ -157,8 +171,13 @@ class ValidationResults extends React.Component {
       let semiCorrect = undefined
       if(isCorrect){
         if(excerciseIndex <= oneScoredExcercises){
-          score += oneScore
-        } else if (excerciseIndex == threeScoredExcercise) {
+          score += 1
+        } else if (excerciseIndex == 13) {
+          score += excercise.score
+          if(excercise.score == 1){
+            semiCorrect = true
+          }
+        } else if (excerciseIndex == 14) {
           score += 1
           if(excercise.isCorrect14_1){
             score += 1
@@ -176,8 +195,6 @@ class ValidationResults extends React.Component {
           } else {
             semiCorrect = true
           }
-        } else if (excerciseIndex <= doubleScoredExcercises) {
-          score += doubleScore
         }
       }
 

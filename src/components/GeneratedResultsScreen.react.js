@@ -37,7 +37,11 @@ class Header extends React.Component {
       <div style={styles.header}>
         <label>
           <label>Сид рандомайзера: {seed}</label>
-          <label className="text-warning">{this.props.seedRef?.current?.value !== ''?' (установлен вручную)':''}</label>
+          <label className="text-danger">
+            {this.props.seedRef?.current?.value !== ''?
+              (<span style={{marginLeft: '5px'}}>{'(установлен вручную)'}</span>)
+            :''}
+          </label>
           <Copy seed={seed}/>
         </label>
       </div>
@@ -55,12 +59,8 @@ class Copy extends React.Component {
   }
 
   copySeed(e){
-    e.stopPropagation()
-    e.nativeEvent.stopImmediatePropagation()
-    if(e.target === e.currentTarget){
-      this.setState({copied: true})
-      utils.copyText(this.props.seed)
-    }
+    this.setState({copied: true})
+    utils.copyText(this.props.seed)
   }
 
   render(){
