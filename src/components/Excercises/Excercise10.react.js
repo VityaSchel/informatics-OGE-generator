@@ -1,5 +1,4 @@
 import React from 'react'
-import randomWords from 'random-words'
 import utils from '../../utils.js'
 
 class Excercise10 extends React.Component {
@@ -10,7 +9,7 @@ class Excercise10 extends React.Component {
   }
 
   generateExcerciseData(){
-    let decodedIntegers = Array(3).fill(Math.floor(Math.random()*1000))
+    let decodedIntegers = Array(3).fill().map(() => Math.floor(Math.random()*1000))
     let notations
     this.integers = []
     for (let integer of decodedIntegers){
@@ -23,7 +22,7 @@ class Excercise10 extends React.Component {
     this.integers = utils.shuffle(this.integers)
 
     this.answer = Math.max(...decodedIntegers)
-    this.answer = utils.encodeAnswer(this.answer)
+    this.answer = utils.encodeAnswer(10, this.answer)
   }
 
   render(){

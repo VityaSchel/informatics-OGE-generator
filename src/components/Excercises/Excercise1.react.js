@@ -9,12 +9,6 @@ class Excercise1 extends React.Component {
   }
 
   generateExcerciseData(){
-    let _symbolEncodingSizeInt = Math.pow(2, Math.ceil(Math.random()*4))
-    let _symbolEncodingSizeType = utils.randomItem(['битами', 'байтами'])
-    this.symbolEncodingSize = `${_symbolEncodingSizeInt} ${_symbolEncodingSizeType}`
-    this.symbolEncodingSizeInBits = _symbolEncodingSizeType==='битами'?_symbolEncodingSizeInt:_symbolEncodingSizeInt*8
-    this.symbolsRemoved = utils.random(2,8)
-
     this.list = utils.randomItem([
       {
         common: 'животные',
@@ -48,7 +42,7 @@ class Excercise1 extends React.Component {
         common: 'игры',
         subject: 'название игры',
         items: {
-          3: ['NBA', 'WWE', ''],
+          3: ['NBA', 'WWE'],
           4: ['DayZ', 'Doom', 'FIFA'],
           5: ['Knack', 'Metro', 'Sonic'],
           6: ['FarCry', 'MadMax', 'Mortal'],
@@ -59,6 +53,13 @@ class Excercise1 extends React.Component {
         }
       }
     ])
+
+    let _symbolEncodingSizeInt = Math.pow(2, Math.ceil(Math.random()*4))
+    let _symbolEncodingSizeType = utils.randomItem(['битами', 'байтами'])
+    this.symbolEncodingSize = `${_symbolEncodingSizeInt} ${_symbolEncodingSizeType}`
+    this.symbolEncodingSizeInBits = _symbolEncodingSizeType==='битами'?_symbolEncodingSizeInt:_symbolEncodingSizeInt*8
+    let min = Object.keys(this.list.items)[0], max = Object.keys(this.list.items).last()
+    this.symbolsRemoved = utils.random(Number(min), Number(max))
 
     let itemsList = []
     for (let possibleWords of Object.values(this.list.items)) {
@@ -72,7 +73,7 @@ class Excercise1 extends React.Component {
     this.symbolsRemoved += commaAndSpaceSymbols
     this.writtenText = `${itemsList.join(', ')} – ${this.list.common}`
 
-    this.answer = utils.encodeAnswer(this.answer)
+    this.answer = utils.encodeAnswer(1, this.answer)
   }
 
   render(){

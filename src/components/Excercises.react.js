@@ -68,8 +68,6 @@ class ExcerciseText extends React.Component {
   }
 }
 
-window.appData = {}
-window.appData.components = Array(16).fill().map(r => React.createRef())
 function getExcercise(number){
   switch(number){
     case 1:
@@ -122,7 +120,6 @@ function getExcercise(number){
   }
 }
 
-window.appData.answers = {}
 class ExcerciseAnswer extends React.Component {
   constructor (props){
     super(props);
@@ -134,10 +131,12 @@ class ExcerciseAnswer extends React.Component {
 
   render(){
     return (
-      <InputGroup>
-        <InputGroupText>Ответ</InputGroupText>
-        <Input onInput={e => this.handleInput(e)}/>
-      </InputGroup>
+      <div ref={window.appData.answersInputs[this.props.number]}>
+        <InputGroup>
+          <InputGroupText>Ответ</InputGroupText>
+          <Input onInput={e => this.handleInput(e)}/>
+        </InputGroup>
+      </div>
     )
   }
 }

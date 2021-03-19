@@ -11,7 +11,6 @@ const folderNames = ['видения', 'новелла', 'ода', 'опус', '
 'лиро-эпические', 'стансы', 'баллада', 'поэма', 'драматические', 'драма', 'комедия', 'трагедия']
 
 const extensions = ['.txt', '.text', '.rtf', '.html', '.log']
-window.appData.extraFileExtensions = extensions
 
 const ExtraFiles = {
   startGeneration: function(){
@@ -41,6 +40,7 @@ const ExtraFiles = {
   },
 
   generate: function(){
+    window.appData.extraFileExtensions = extensions
     return new Promise((resolve, reject) => {
       if(!window.appData.extraFiles){
         window.appData.extraFiles = {}

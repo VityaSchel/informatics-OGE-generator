@@ -1,5 +1,4 @@
 import React from 'react'
-import randomWords from 'random-words'
 import utils from '../../utils.js'
 
 class Excercise8 extends React.Component {
@@ -60,7 +59,7 @@ class Excercise8 extends React.Component {
     let term = pages.filter(page => page === (this.termShown?this.term1:this.term2)).length
     this.answer = (or - term + both) * 10
 
-    this.answer = utils.encodeAnswer(this.answer)
+    this.answer = utils.encodeAnswer(8, this.answer)
   }
 
   render(){

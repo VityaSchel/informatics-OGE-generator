@@ -22,9 +22,9 @@ class Excercise2 extends React.Component {
 
     let lookForReversed = true
     this.alternativeSolution = this.findAllSolutions(this.encodedMessage, lookForReversed)
-    this.answer = [utils.encodeAnswer(this.decodedMessage)]
+    this.answer = [utils.encodeAnswer(2, this.decodedMessage)]
     if(this.alternativeSolution)
-      this.answer.push(utils.encodeAnswer(this.alternativeSolution))
+      this.answer.push(utils.encodeAnswer(2, this.alternativeSolution))
   }
 
   findAllSolutions(encodedMessage, lookForReversed = false){

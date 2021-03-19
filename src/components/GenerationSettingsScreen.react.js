@@ -65,7 +65,7 @@ class Generator extends React.Component {
     return (
       <>
         <InputGroup>
-          <Input placeholder="Кол-во вариантов (необязательно)" type='number' min={1} max={1000}/>
+          <Input placeholder="Кол-во вариантов (необязательно)" type='number' min={1} max={1}/>
           <Button color="secondary" onClick={() => this.props.ongenerate(this.refSeed)}>Сгенерировать</Button>
         </InputGroup>
         {'\n'}
@@ -83,8 +83,8 @@ class Gallery extends React.Component {
   render(){
     return (
       <div style={styles.gallery}>
-        <img src='https://picsum.photos/300/200' alt='Демонстрация работы сайта' width={300} height={200}/>
-        <img src='https://picsum.photos/300/200?' alt='Демонстрация работы сайта' width={300} height={200}/>
+        <img src='/static/images/primary_screenshot.png' style={styles.gallery.screenshots} alt='Демонстрация работы сайта' width={300} height={200}/>
+        <img src='/static/images/secondary_screenshot.png' style={styles.gallery.screenshots} alt='Демонстрация работы сайта' width={300} height={200}/>
       </div>
     )
   }

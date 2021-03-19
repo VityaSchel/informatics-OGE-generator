@@ -18,7 +18,12 @@ let styles = {
 
   gallery: {
     display: 'flex',
-    gap: '20px'
+    gap: '20px',
+
+    screenshots: {
+      boxShadow: '0 0 10px 0px rgba(0,0,0,0.2)',
+      borderRadius: '5px'
+    }
   }
 }
 

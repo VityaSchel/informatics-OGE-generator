@@ -59,7 +59,7 @@ class Excercise3 extends React.Component {
     }
 
     this.logicalExpression = `(x > ${condition1}) И ${_invert?'НЕ ':''}(${condition2text})`
-    this.answer = utils.encodeAnswer(this.answer)
+    this.answer = utils.encodeAnswer(3, this.answer)
   }
 
   render(){

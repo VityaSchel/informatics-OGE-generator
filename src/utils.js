@@ -97,17 +97,18 @@ const utils = {
     return [[shrinkedPoint1X, shrinkedPoint2Y], [shrinkedPoint2X, shrinkedPoint1Y]]
   },
 
-  encodeAnswer: function(answer){
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-      pushAnswerToDebug(answer)
-    }
+  encodeAnswer: function(excercise, answer, skipDebugLog = false){
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development')
+      if(!skipDebugLog)
+        pushAnswerToDebug(excercise, answer)
 
     const salt = '🧂🧂🧂 SALT !!! :D 🧂🧂🧂'
     if(answer === undefined) {
       return answer
     } else {
       let _answer = String(answer).toLowerCase()
-      return md5(_answer+salt)
+      let seed = window.appData.seed
+      return md5(_answer + salt + excercise + seed)
     }
   },
 
@@ -147,14 +148,37 @@ Array.prototype.last = function(){
   return this[this.length-1]
 }
 
-function pushAnswerToDebug(answer){
-  if(window.appData.DEBUG === undefined){
-    window.appData.DEBUG = {}
+function pushAnswerToDebug(excercise, answer){
+  function prepareDebug(){
+    if(window.appData.DEBUG === undefined){
+      window.appData.DEBUG = {}
+    }
+    if(window.appData.DEBUG.answers === undefined){
+      window.appData.DEBUG.answers = []
+    }
+    if(!Array.isArray(window.appData.DEBUG.answers[excercise])) {
+      window.appData.DEBUG.answers[excercise] = []
+    }
+    if(typeof window.appData.DEBUG.autofill !== 'function'){
+      window.appData.DEBUG.autofill = function(from = 1, to = 12){
+        for (let i = from; i <= to; i++){
+          let correctAnswer = window.appData.DEBUG.answers[i]
+          if(correctAnswer !== undefined){
+            window.appData.answersInputs[i].current.querySelector('input').value = correctAnswer[0]
+            window.appData.answers[i] = correctAnswer[0]
+          }
+        }
+      }
+    }
+    if(typeof window.appData.DEBUG.unlock11and12 !== 'function'){
+      window.appData.DEBUG.unlock11and12 = function(){
+        window.ExtraFiles.generate()
+      }
+    }
   }
-  if(window.appData.DEBUG.answers === undefined){
-    window.appData.DEBUG.answers = []
-  }
-  window.appData.DEBUG.answers.push(answer)
+
+  prepareDebug()
+  window.appData.DEBUG.answers[excercise].push(answer)
 }
 
 export default utils

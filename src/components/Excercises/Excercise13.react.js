@@ -271,7 +271,7 @@ class Text extends React.Component {
     window.document.body.style.overflow = 'hidden'
     this.correctOutputParagraph = componentContent.querySelector('p').innerHTML
     this.correctOutputTable = this.row.map((h, i) => h.map(cell => i==0?`<b>${cell}</b>`:cell))
-    html2canvas(componentContent).then(function(canvas) {
+    html2canvas(componentContent, {logging: false}).then(function(canvas) {
       component.appendChild(canvas)
       componentContent.remove()
       window.scrollTo({top:currentScroll, behavior: 'instant'})

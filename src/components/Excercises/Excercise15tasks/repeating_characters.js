@@ -1,3 +1,5 @@
+import utils from '../../../utils.js'
+import randomWords from 'random-words'
 import dedent from 'dedent-js'
 
 let repeating_characters = {
@@ -13,7 +15,7 @@ let repeating_characters = {
                              return arr.indexOf(val) !== i && arr.lastIndexOf(val) === i;
                            }).length
                          }`,
-       inputFillFunction: () => '\'hello world\''
+       inputFillFunction: () => randomWords({ exactly: 2, join: ' ' })
      },
      'python': {
        inputFormat: '\'testcase\'',

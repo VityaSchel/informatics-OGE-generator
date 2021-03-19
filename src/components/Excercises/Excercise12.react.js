@@ -10,7 +10,7 @@ class Excercise12 extends React.Component {
 
   render(){
     return (
-      <Excercise12Inner {...this.props} setanswer={_answer => this.answer = utils.encodeAnswer(_answer)}/>
+      <Excercise12Inner {...this.props} setanswer={_answer => this.answer = utils.encodeAnswer(12, _answer)}/>
     )
   }
 }
@@ -27,7 +27,7 @@ function Excercise12Inner(props) {
         )
         :
         (
-          <Text setanswer={answer => props.setanswer(answer)} />
+          <Text setanswer={(answer) => props.setanswer(answer)} />
         )
       }
     </>
@@ -51,7 +51,7 @@ class Text extends React.Component {
       let regex = new RegExp('^.*\\'+this.extension+'$')
       answer += filenames.filter(filename => regex.test(filename)).length
     }
-    this.props.setAnswer(answer)
+    this.props.setanswer(answer)
   }
 
   render(){

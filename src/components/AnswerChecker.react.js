@@ -65,11 +65,11 @@ class AnswerChecker extends React.Component {
     function check14excercise(){
       let correctAnswer14_1 = window.appData.components[14].ref.current.answer14_1
       let userAnswer14_1 = window.appData.answers[14.1] ?? ''
-      userAnswer14_1 = utils.encodeAnswer(userAnswer14_1)
+      userAnswer14_1 = utils.encodeAnswer(14.1, userAnswer14_1, true)
 
       let correctAnswer14_2 = window.appData.components[14].ref.current.answer14_2
       let userAnswer14_2 = window.appData.answers[14.2] ?? ''
-      userAnswer14_2 = utils.encodeAnswer(userAnswer14_2)
+      userAnswer14_2 = utils.encodeAnswer(14.2, userAnswer14_2, true)
 
       let isCorrect14_1 = correctAnswer14_1===userAnswer14_1
       let isCorrect14_2 = correctAnswer14_2===userAnswer14_2
@@ -87,16 +87,18 @@ class AnswerChecker extends React.Component {
       return {index: 15, isCorrect: testCorrect, allTestsPassing: tests===true}
     }
 
-    if(this.revalidationProtection){return;}
+    if(this.revalidationProtection){ return; }
     this.revalidationProtection = true;
     _setModal(false)
+
     let data = [];
     for (let i = 1; i <= 12; i++){
       let correctAnswer = window.appData.components[i].ref.current.answer
       let userAnswer = window.appData.answers[i] ?? ''
-      userAnswer = utils.encodeAnswer(userAnswer)
+      userAnswer = utils.encodeAnswer(i, userAnswer, true)
       let isCorrect = false
       if(Array.isArray(correctAnswer)){
+        console.log('Array', correctAnswer, userAnswer)
         isCorrect = correctAnswer.some(ans => ans===userAnswer)
       } else {
         isCorrect = correctAnswer===userAnswer

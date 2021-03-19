@@ -1,5 +1,4 @@
 import React from 'react'
-import randomWords from 'random-words'
 import utils from '../../utils.js'
 import '../../canvas-arrow.js'
 
@@ -101,7 +100,7 @@ class Excercise9 extends React.Component {
     this.data = input
     countRefs(input)
 
-    this.answer = utils.encodeAnswer(input.last()[0].refsCount)
+    this.answer = utils.encodeAnswer(9, input.last()[0].refsCount)
 
     return this.data
   }

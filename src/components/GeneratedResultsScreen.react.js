@@ -35,15 +35,57 @@ class Header extends React.Component {
   render(){
     return (
       <div style={styles.header}>
-        <label>
-          <label>Сид рандомайзера: {seed}</label>
-          <label className="text-danger">
-            {this.props.seedRef?.current?.value !== ''?
-              (<span style={{marginLeft: '5px'}}>{'(установлен вручную)'}</span>)
-            :''}
-          </label>
-          <Copy seed={seed}/>
+        <Seed seedRef={this.props.seedRef}/>
+      </div>
+    )
+  }
+}
+
+class Seed extends React.Component {
+  constructor (props){
+    super(props);
+
+    this.ref = React.createRef()
+
+    this.src = <>
+        <label id='seed-label'>Сид рандомайзера: {seed}</label>
+        <label className="text-danger">
+          {this.props.seedRef?.current?.value !== ''?
+            (<span style={{marginLeft: '5px'}}>{'(установлен вручную)'}</span>)
+          :''}
         </label>
+      </>
+  }
+
+  componentDidMount(){
+    this.installObserver()
+  }
+
+  installObserver(){
+    let _globalThis = this
+    const callback = function(mutationsList, observer) {
+      _globalThis.observer.disconnect()
+      _globalThis.ref.current.innerHTML = ReactDOMServer.renderToString(_globalThis.src)
+      _globalThis.installObserver()
+    };
+
+    this.observer = new MutationObserver(callback);
+    this.observer.observe(this.ref.current, { attributes: true, childList: true, subtree: true });
+  }
+
+  componentWillUnmount(){
+    this.observer.disconnect();
+  }
+
+  render(){
+    return (
+      <div>
+        <div ref={this.ref} style={{display: 'inline-block'}}>
+          {this.src}
+        </div>
+        <div style={{display: 'inline-block'}}>
+          <Copy seed={seed}/>
+        </div>
       </div>
     )
   }

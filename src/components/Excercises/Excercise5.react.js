@@ -27,7 +27,7 @@ class Excercise5 extends React.Component {
         this.endNumber *= this.answer
       }
     }
-    this.answer = utils.encodeAnswer(this.answer)
+    this.answer = utils.encodeAnswer(5, this.answer)
   }
 
   render(){

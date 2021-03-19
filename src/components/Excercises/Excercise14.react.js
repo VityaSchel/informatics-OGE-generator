@@ -10,8 +10,8 @@ class Excercise14 extends React.Component {
     super(props);
     this.generateExcerciseData()
 
-    this.answer14_1 = utils.encodeAnswer(this.condition[0].answer)
-    this.answer14_2 = utils.encodeAnswer(this.condition[1].answer)
+    this.answer14_1 = utils.encodeAnswer(14.1, this.condition[0].answer)
+    this.answer14_2 = utils.encodeAnswer(14.2, this.condition[1].answer)
   }
 
   generateExcerciseData(){
