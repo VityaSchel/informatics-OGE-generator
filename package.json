@@ -33,7 +33,7 @@
     "seedrandom": "^3.0.5",
     "string-similarity": "^4.0.4",
     "web-vitals": "^1.0.1",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.17.0"
   },
   "scripts": {
     "start": "craco start",
