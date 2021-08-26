@@ -1,5 +1,9 @@
 # [Удобный генератор вариантов ОГЭ по информатике](https://oge.utidteam.com/)
 
+### Хватит писать что мне 16 лет и я учусь в 9 классе :rage::rage::rage:
+
+если я написал программу для изучения азбуки это не значит что я в детском саду, если я написал генератор огэ это не значит что я им пользуюсь для подготовки к огэ :rage:
+
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/vityaschel/informatics-oge-generator) ![GitHub issues](https://img.shields.io/github/issues/vityaschel/informatics-oge-generator) ![GitHub](https://img.shields.io/github/license/vityaschel/informatics-oge-generator) ![GitHub last commit](https://img.shields.io/github/last-commit/vityaschel/informatics-oge-generator)
 
 Генератор вариантов Российского Основного Государственного Экзамена.
